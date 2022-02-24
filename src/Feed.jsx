@@ -28,7 +28,12 @@ export const Feed = () => {
     useEffect(() => {
         db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             console.log(snapshot.docs.map(doc => doc.data()))
-            setPosts(snapshot.docs.map(doc => doc.data()))
+            setPosts(snapshot.docs.map(doc => {
+                return {
+                    id: doc.id,
+                    data: doc.data()
+                }
+            }))
         })
 
     }, [])
@@ -71,6 +76,11 @@ export const Feed = () => {
                 </div>
 
             </div>
+            {
+                posts.map(({ id, data: { message, name, description, photoUrl } }) => (
+                    <Post key={id} message={message} name={name} description={description} photoUrl={photoUrl} />
+                ))
+            }
             <Post name="Jishan Pathan" description="This is Test" message="Learning react js" photoUrl="https://media-exp1.licdn.com/dms/image/C4E03AQGgXeaxRZUVqA/profile-displayphoto-shrink_100_100/0/1640021234235?e=1651104000&v=beta&t=0ft1WiEhi_F0i-LKlI2kveAFJmpatNjEjcTmI_murME" />
 
 
