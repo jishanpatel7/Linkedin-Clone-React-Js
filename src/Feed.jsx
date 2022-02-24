@@ -8,18 +8,22 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { Post } from './components/Post';
 import { db } from './firebase';
 import firebase from 'firebase/compat/app';
+import { useSelector } from 'react-redux';
+import { selectUser } from './features/userSlice';
+import FlipMove from 'react-flip-move';
 
 
 export const Feed = () => {
     const [input, setInput] = React.useState('');
     const [posts, setPosts] = React.useState([]);
+    const user = useSelector(selectUser)
     const submitPost = (e) => {
         e.preventDefault();
         db.collection('posts').add({
-            name: "Jishan Pathan",
+            name: user.displayName,
             description: "this is a test post",
             message: input,
-            photoUrl: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+            photoUrl: user.photoURL,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         setInput('');
@@ -27,7 +31,7 @@ export const Feed = () => {
 
     useEffect(() => {
         db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-            console.log(snapshot.docs.map(doc => doc.data()))
+          
             setPosts(snapshot.docs.map(doc => {
                 return {
                     id: doc.id,
@@ -42,7 +46,7 @@ export const Feed = () => {
         <div className='feed'>
             <div className='feed__input'>
                 <div className='feed__form'>
-                    <Avatar />
+                    <Avatar src={user.photoURL} />
                     <form onSubmit={submitPost}>
                         <input className='inputText' placeholder='Start a post' value={input} onChange={e => setInput(e.target.value)} />
                         <input type="submit" />
@@ -76,12 +80,14 @@ export const Feed = () => {
                 </div>
 
             </div>
+            <FlipMove>
             {
                 posts.map(({ id, data: { message, name, description, photoUrl } }) => (
                     <Post key={id} message={message} name={name} description={description} photoUrl={photoUrl} />
                 ))
             }
-            <Post name="Jishan Pathan" description="This is Test" message="Learning react js" photoUrl="https://media-exp1.licdn.com/dms/image/C4E03AQGgXeaxRZUVqA/profile-displayphoto-shrink_100_100/0/1640021234235?e=1651104000&v=beta&t=0ft1WiEhi_F0i-LKlI2kveAFJmpatNjEjcTmI_murME" />
+            </FlipMove>
+
 
 
         </div>

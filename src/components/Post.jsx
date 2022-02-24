@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import Avatar from '@mui/material/Avatar';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import "../css/post.css";
@@ -7,9 +7,9 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import ShareIcon from '@mui/icons-material/Share';
 
-export const Post = ({ name, description, message, photoUrl }) => {
+export const Post = forwardRef(({ name, description, message, photoUrl }, ref) => {
     return (
-        <div className="posts">
+        <div className="posts" ref={ref}>
 
             <div className="post__header">
 
@@ -48,4 +48,6 @@ export const Post = ({ name, description, message, photoUrl }) => {
             </div>
         </div>
     )
+
 }
+)

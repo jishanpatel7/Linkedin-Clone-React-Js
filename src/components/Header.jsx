@@ -9,7 +9,12 @@ import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import MessageIcon from '@mui/icons-material/Message';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Avatar } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../features/userSlice';
 export const Header = () => {
+
+const user = useSelector(selectUser);
+ 
   return (
     <div className='header'>
         <div className='header__left'>
@@ -27,7 +32,7 @@ export const Header = () => {
            <Headeroptions Icon={BusinessCenterIcon} title="Jobs"/>
            <Headeroptions Icon={MessageIcon} title="Messaging"/>
            <Headeroptions Icon={NotificationsIcon} title="Notifications"/>
-           <Headeroptions avatar={Avatar} title="Jishan Pathan"/>
+           <Headeroptions avatar={Avatar} title={user.displayName}/>
             </div>
     </div>
   )
