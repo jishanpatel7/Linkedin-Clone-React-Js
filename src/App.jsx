@@ -5,20 +5,21 @@ import './App.css';
 import { Header } from './components/Header';
 import { Login } from './components/Login';
 import { SideBar } from './components/SideBar';
-import { selectUser ,loginUser, logoutUser} from './features/userSlice';
+import { selectUser, loginUser, logoutUser } from './features/userSlice';
 import { Feed } from './Feed';
 import { auth } from './firebase';
 import { Widget } from './Widget';
+import { Profile } from './components/Profile';
 
 
 function App() {
   const user = useSelector(selectUser);
- 
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-   auth.onAuthStateChanged(userAuth => {
-  
+    auth.onAuthStateChanged(userAuth => {
+
       if (userAuth) {
         //already logged in
         dispatch(loginUser({
@@ -31,7 +32,7 @@ function App() {
         //not logged in
         dispatch(logoutUser())
       }
-   })
+    })
   }, []);
   return (
     <>
@@ -45,6 +46,7 @@ function App() {
             <SideBar />
             <Feed />
             <Widget />
+            <Profile />
           </div>
         </div>
       )}

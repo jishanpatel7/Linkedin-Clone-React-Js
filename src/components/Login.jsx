@@ -1,15 +1,41 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import "../css/login.css";
 import { loginUser } from '../features/userSlice';
-import { auth } from '../firebase';
-export const Login = () => {
+import { auth, provider } from '../firebase';
+
+import { FcGoogle } from 'react-icons/fc';
+export const Login = (props) => {
     const [signup, setSignup] = React.useState(false);
     const [name, setName] = React.useState('');
     const [photoUrl, setPhotoUrl] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+
+    const signInGoogle = () => {
+
+        auth.signInWithPopup(provider)
+            .then(result => {
+                const user = result.user;
+
+                setName(user.displayName);
+                setPhotoUrl(user.photoURL);
+                setEmail(user.email);
+                setPassword(user.uid);
+                dispatch(loginUser({
+                    name: user.displayName,
+                    photoUrl: user.photoURL,
+                    email: user.email,
+                    password: user.uid
+                }));
+                console.log(user);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
     const register = (e) => {
         e.preventDefault();
@@ -106,27 +132,49 @@ export const Login = () => {
                             <h4>Already on Linkedin ? <span onClick={e => setSignup(false)}>Sign in</span></h4>
                         </form>
                     ) : (
+                        <>
+                            <form className="loginForm" onSubmit={signIn}>
+                                <h1>Sign in</h1>
+                                <p>Stay updated on your professional world</p>
 
-                        <form className="loginForm" onSubmit={signIn}>
-                            <h1>Sign in</h1>
-                            <p>Stay updated on your professional world</p>
+                                <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+                                <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
 
-                            <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-                            <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+                                <button className='submitButton'>Sign in</button>
+                                <h4>New to Linkedin ? <span onClick={e => setSignup(true)}>Join Now</span></h4>
+                            </form>
+                            <p>OR</p>
+                            <div className='googleLogin'>
+                                <Google onClick={signInGoogle}>
 
-                            <button className='submitButton'>Sign in</button>
-                            <h4>New to Linkedin ? <span onClick={e => setSignup(true)}>Join Now</span></h4>
-                        </form>
+                                    <FcGoogle style={{
+                                        fontSize: '30px',
+                                        marginRight: '10px',
+                                    }} />  Sign in with Google
+                                </Google>
+                            </div>
+                        </>
                     )
                 }
-
-
-
-
-
-
             </div>
         </>
     )
 }
+
+const Google = styled.button`
+display:flex;
+justify-content:center;
+align-items:center;
+background-color:#fff;
+height: 56px;
+width:100%;
+border-radius:10px;
+box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+vertical-align:middle;
+z-index:0;
+cursor:pointer;
+margin:auto;
+margin-left: 10px;
+border:0;`
+
 

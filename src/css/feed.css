@@ -50,7 +50,13 @@ input[type="submit"] {
     align-items: center;
     color: #333;
     font-size: 14px;
+    padding:10px;
 }
 .option svg{
     margin-right: 5px;
 }
+.option:hover{
+background-color: #d8d8d8;
+border-radius: 5px;
+}
+
